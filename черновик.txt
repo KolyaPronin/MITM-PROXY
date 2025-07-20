@@ -1,0 +1,11 @@
+// черновик
+//************************************************ */ отладка
+        // FILE *file = fopen("output.txt", "w"); 
+        // if (file) {
+        //     fwrite(buffer, 1, total_read, file);
+        //     fflush(file);
+        //     fclose(file);
+        // } else {
+        //     perror("fopen");
+        // }
+//************************************************ */
