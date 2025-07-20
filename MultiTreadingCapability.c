@@ -8,7 +8,45 @@ void *multiThreadingCapability(void *arg) {
 
     http_args args_from_parsing_funk = parsingHttpRequest(client_socket); // парсим http запрос, вытаскиваем url и host
 
-    if(connect_method_handling(args_from_parsing_funk, client_socket)){ // обработка https 
+    // if(connect_method_handling(args_from_parsing_funk, client_socket)){ // обработка https 
+    //     return NULL;
+    // }
+    if (strcmp(args_from_parsing_funk.method, "CONNECT") == 0) {
+        char host[256] = {0};
+        int port = 443;
+        if (sscanf(args_from_parsing_funk.url, "%255[^:]:%d", host, &port) < 1) {
+            fprintf(stderr, "Failed to parse host and port from URL: %s\n", args_from_parsing_funk.url);
+            close(client_socket);
+            return NULL;
+        }
+
+        int remote_socket = handle_connect(host, port, client_socket);
+        if (remote_socket == -1) {
+            close(client_socket);
+            return NULL;
+        }
+
+        SSL *ssl_client = create_tls_server(args_from_parsing_funk, client_socket, host);
+        if (!ssl_client) {
+            close(remote_socket);
+            close(client_socket);
+            return NULL;
+        }
+
+        SSL *ssl_remote = create_tls_client(remote_socket);
+        if (!ssl_remote) {
+            SSL_free(ssl_client);
+            close(remote_socket);
+            close(client_socket);
+            return NULL;
+        }
+
+        proxy_ssl_to_ssl(ssl_client, ssl_remote);
+
+        SSL_free(ssl_client);
+        SSL_free(ssl_remote);
+        close(remote_socket);
+        close(client_socket);
         return NULL;
     }
 
