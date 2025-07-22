@@ -44,7 +44,7 @@ void proxy_ssl_to_ssl(SSL *ssl_client, SSL *ssl_remote) {
 
                     int written = 0;
                     while (written < n) {
-                        int w = SSL_write(ssl_remote, buf + written, n - written);
+                        int w = SSL_write(ssl_remote, buf + written, n - written); // передаем данные на сервер
                         if (w > 0) {
                             written += w;
                         } else {
@@ -67,6 +67,7 @@ void proxy_ssl_to_ssl(SSL *ssl_client, SSL *ssl_remote) {
             while (1) {
                 n = SSL_read(ssl_remote, buf, sizeof(buf));
                 if (n > 0) {
+                    dictionary_from_parsing_https_answer(buf);
                     FILE *log = fopen("serverToClient.txt", "w");
                     if (log) {
                         fwrite(buf, 1, n, log);

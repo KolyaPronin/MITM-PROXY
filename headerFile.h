@@ -22,9 +22,6 @@
 #include <openssl/x509v3.h>
 #include <fcntl.h>
 
-
-
-
 typedef struct  {
     char method[8];
     char url[2048];
@@ -36,6 +33,26 @@ typedef struct {
     X509 *cert;
     EVP_PKEY *pkey;
 } fake_cert;
+
+typedef struct {
+    char protocol[6];
+    char status_code[4];
+    char message[1024];
+    char access_control_allow_origin[256];
+    char data[64];
+    char pragma[16];
+    char expires[32];
+    char cache_control[128];
+    char access_control_allow_credentials[8];
+    char content_type[16];
+    char cross_origin_resource_policy[16];
+    char content_security_policy_report_only[1024];
+    char cross_origin_opener_policy_report_only[1024];
+    char report_to[1024];
+    char server[16];
+    char content_lenght[16];
+}dictionary;
+
 
 void tcpServer();
 void *multiThreadingCapability(void *arg);

@@ -21,7 +21,7 @@ fake_cert generate_fake_cert(char *host) {
     X509 *ca_cert = PEM_read_X509(f_ca_cert, NULL, NULL, NULL);
     EVP_PKEY *ca_key = PEM_read_PrivateKey(f_ca_key, NULL, NULL, NULL);
 
-    // Создание нового X509
+    // Создание  X509 сертификата
     X509 *x509 = X509_new();
 
     BIGNUM *serial = BN_new();
@@ -31,7 +31,7 @@ fake_cert generate_fake_cert(char *host) {
 
     X509_set_version(x509, 2);
     X509_gmtime_adj(X509_get_notBefore(x509), 0);
-    X509_gmtime_adj(X509_get_notAfter(x509), 60 * 60 * 24 * 365); // 1 год
+    X509_gmtime_adj(X509_get_notAfter(x509), 60 * 60 * 24 * 365); // год
 
     X509_NAME *host_name = X509_NAME_new();
     X509_NAME_add_entry_by_txt(host_name, "CN", MBSTRING_ASC, (unsigned char*)host, -1, -1, 0);
